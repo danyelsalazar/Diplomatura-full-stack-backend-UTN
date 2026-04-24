@@ -1,4 +1,4 @@
-import { adduser , getUserByEmail} from "./controllers.js";
+import { adduser , getUserByEmail, getUsers} from "./controllers.js";
 
 const args = process.argv
 const datos = args.slice(3)
@@ -17,6 +17,9 @@ const main = async ()=>{
         case "getByEmail":
             await getUserByEmail(...datos)
             break;
+        case "get":
+            await getUsers()
+            break;
         default:
             console.log(`
 ==================================================
@@ -28,8 +31,8 @@ const main = async ()=>{
 
 📌 OPERACIONES:
    ➕ add         -> npm run dev  add Danyel danyel@gmail.com 1234
-   🔍 getByUser  -> npm run dev  getByUser danyel@gmail.com
-   📋 getUsers   -> npm run dev  getUsers
+   🔍 getByEmail  -> npm run dev  getByEmail danyel@gmail.com
+   📋 get   -> npm run dev  get
 
 💡 Tip: Usa "comillas" para textos con espacios.
 ==================================================

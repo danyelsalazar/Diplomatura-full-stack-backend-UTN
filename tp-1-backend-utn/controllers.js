@@ -53,7 +53,7 @@ const getUserByEmail = async(email)=>{
         const [rows] = await db.query(query, `%${email}%`);
        
         if(rows.length <= 0){
-            return console.log('No se encontrom el usuario');
+            return console.log('No se encontro el usuario');
         }
 
         console.log(rows)
@@ -69,6 +69,26 @@ const getUserByEmail = async(email)=>{
     }
 }
 
+// listamos los usuarios de la base de datos:
+
+const getUsers = async()=>{
+    try {
+        const query = `SELECT * FROM users`
+
+        const [rows] = await db.query(query)
+
+        if(rows.length <= 0) return console.log("No hay usuarios que mostrar");
+
+        console.log("Uusarios de la base de datos: ", rows);
+
+        return;
+        
+    } catch (error) {
+        console.error("Error: ", error);
+        
+    }
+}
 
 
-export {adduser, getUserByEmail}
+
+export {adduser, getUserByEmail, getUsers}
