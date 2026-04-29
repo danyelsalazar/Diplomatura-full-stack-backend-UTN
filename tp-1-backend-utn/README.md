@@ -32,7 +32,7 @@ Aplicación de línea de comandos (CLI) desarrollada en Node.js para gestionar u
 
 ```bash
 git clone https://github.com/danyelsalazar/Diplomatura-full-stack-backend-UTN.git
-cd tp-1-backen-utn
+cd tp-1-backend-utn
 ```
 
 ---
