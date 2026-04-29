@@ -1,5 +1,3 @@
-// aqui es el punto de entrada de la aplicacion, es decir, el archivo que se ejecuta cuando se corre el comando "npm run dev" en la terminal. En este archivo se parsean los argumentos de la linea de comandos para determinar que operacion se quiere realizar y se llama a la funcion correspondiente del controlador.
-
 import boxen from "boxen";
 import chalk from "chalk";
 import { addUser , getUserByEmail, getUsers, updateUser, deleteUserById, addUsers, clearUsersTable} from "./controllers.js";
