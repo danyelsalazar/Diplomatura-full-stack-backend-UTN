@@ -1,4 +1,4 @@
-/* Crteamos la base de datos */
+/* Creamos la base de datos */
 CREATE DATABASE usuarios_db;
 USE usuarios_db;
 
@@ -7,6 +7,6 @@ USE usuarios_db;
 CREATE TABLE users (
   id VARCHAR(50) PRIMARY KEY,
   username VARCHAR(100),
-  email VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
   password VARCHAR(100)
 );
