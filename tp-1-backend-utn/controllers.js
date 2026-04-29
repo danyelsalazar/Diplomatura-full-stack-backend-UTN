@@ -1,22 +1,44 @@
-// aqui van los controladores de la aplicacion, es decir, las funciones que se encargan de manejar las peticiones y respuestas de la aplicacion, y que se conectan con la base de datos para realizar las operaciones necesarias.
-import { log } from "console";
-import { db } from "./config.js";
-import crypto from "crypto";
+import { db } from "./config.js"; //la conexion de mi bdd
+import crypto from "crypto"; //para un id aleatorio
+//Darle estilos a mi consola:
+import chalk from "chalk";
+import boxen from "boxen";
 
-/* aqui voy a tener mis patros dse email , nombre y password para validar los datos que 
-me llegan por la linea de comandos antes de hacer cualquier operacion con la base de datos, 
-asi evito hacer consultas innecesarias a la base de datos y ademas puedo asegurarme de que los 
-datos que se van a insertar o actualizar en la base de datos cumplen con ciertos requisitos de formato y seguridad.
-*/
+// ----------------------------------
+// los patrones que usare para validar los datos
+// --------------------------------------
 const patrones = {
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // este es un patron basico para validar el formato de un email, no es perfecto pero sirve para nuestro caso de uso
-  name: /^[a-zA-ZÀ-ÿ\s]{3,40}$/, // este patron valida que el nombre solo contenga letras (mayusculas o minusculas) y espacios, y que tenga entre 3 y 40 caracteres, ademas incluye letras con acentos y caracteres especiales de algunos idiomas
-  password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, // este patron valida que la contrasenia tenga al menos 8 caracteres, al menos una letra mayuscula, al menos una letra minuscula y al menos un numero, ademas no permite caracteres especiales para evitar problemas de inyeccion de codigo o caracteres no permitidos en la base de datos
+  name: /^[a-zA-ZÀ-ÿ\s]{3,40}$/, // este patron valida que el nombre solo contenga letras (mayusculas o minusculas) y espacios, y que tenga entre 3 y 40 caracteres
+  password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, // este patron valida que la contrasenia tenga al menos 8 caracteres, al menos una letra mayuscula, al menos una letra minuscula y al menos un numero.
 };
 
 
+// -------------------------------------------------------------------------------------
+// funciones de mensaje de error general para todos y uno para email que ya existe 
+// ------------------------------------------------------------------------------------
+const mensajeError = (error)=>{
+    console.log(boxen(`❌ Error: ${error}`, {
+            padding: 0.5,
+            margin: 1,
+            borderColor: "red",
+            borderStyle: "round"
+    }));
+}
 
-// funsion para validar los datos de usuario
+const mensajeErrorEmail = () =>{
+    console.log(boxen(`❌ El email de usaurio ya existe en la base de datos`, {
+            padding: 0.5,
+            margin: 1,
+            borderColor: "red",
+            borderStyle: "round"
+        }));
+}
+
+
+//------------------------------------------
+// funcion para validar los datos de usuario
+//-------------------------------------------
 
 const validarDatos = (username, email, password)=>{
     // valido los campos y muestro el error 
@@ -32,14 +54,13 @@ const validarDatos = (username, email, password)=>{
 - Al menos 8 caracteres.
 - Al menos una mayuscula.
 - Al menos una minuscula. 
-- Al menos un numero. 
-- No permite carecteres especiales.`);
+- Al menos un numero. `);
 }
 
 //---------------------------------------------
 // ----------- creamos el usuario ---------------
 //---------------------------------------------
-const adduser = async (username, email, password) => {
+const addUser = async (username, email, password) => {
   try {
     // validaciones:
     if (!username || !email || !password) {
@@ -60,24 +81,21 @@ const adduser = async (username, email, password) => {
     // insertamos el usuario en la base de datos:
     await db.query(query, [id, username, email, password]);
 
-    console.log("✅Usuario creado");
+    console.log(boxen("✅ Usuario creado correctamente", {
+            padding: 0.5,
+            margin: 1,
+            borderColor: "green",
+            borderStyle: "round"
+    }));
 
-    return true;
   } catch (error) {
 
     // si el email ya existe en la base de datos se lo hago saber al usuario
     if (error.code === 'ER_DUP_ENTRY') {
-        console.error(`---------------------------------------------
-❌ Error: El email de usuario ya existe.
----------------------------------------------`);
+        mensajeErrorEmail()
     }else{
-        console.error(`---------------------------------------------
-❌ Error: ${error.message}
----------------------------------------------`);
+        mensajeError(error)
     }
-  } finally {
-    // siempre sierro la conexion
-    await db.end();
   }
 };
 
@@ -96,13 +114,20 @@ const addUsers = async (users) => {
       const [results] = await db.query(query, [user.id, user.username, user.email, user.password ]);
     }
 
-    console.log(`---------------------------------------------
-✅ Usuarios de prueba cargados correctamente.
----------------------------------------------`);    
+    console.log(boxen("✅ Usuarios de prueba cargados correctamente", {
+            padding: 0.5,
+            margin: 1,
+            borderColor: "green",
+            borderStyle: "round"
+    })); 
+
   } catch (error) {
-    console.error(`---------------------------------------------
-❌ Error: ${error}
----------------------------------------------`)
+        console.log(boxen(`❌ Error: Ya cargaste los usuarios de prueba`, {
+            padding: 0.5,
+            margin: 1,
+            borderColor: "red",
+            borderStyle: "round"
+        }));
   }
 };
 
@@ -116,25 +141,18 @@ const getUserByEmail = async (email) => {
             SELECT * FROM users
             WHERE email = ?;`;
 
-    const [rows] = await db.query(query, email);
+    const [rows] = await db.query(query, [email]);
 
     if (rows.length <= 0) {
       throw new Error("No se encontro el usuario");
     }
 
-    console.log(rows);
+    console.table(rows);
 
-    return;
   } catch (error) {
-    console.error(`---------------------------------------------
-❌ Error: ${error.message}
----------------------------------------------`);
-  } finally {
-    // siempre sierro la conexion
-    await db.end();
-  }
-};
-
+        mensajeError(error)
+    };
+}
 
 // ---------------------------------------------------------------------------
 //--------------- listamos los usuarios de la base de datos: ---------------
@@ -150,21 +168,10 @@ const getUsers = async () => {
       throw new Error("No hay usuarios que mostrar");
     }
 
-    console.log(
-      `---------------------------------------------
-🗂️ Usarios de la base de datos: `,
-      rows,
-      `
----------------------------------------------`,
-    );
+    console.table(rows) //asi mostramos una tabala ordenada para todos mis datos de la bdd
 
-    return true;
   } catch (error) {
-    console.error(`---------------------------------------------
-❌ Error: ${error.message}
----------------------------------------------`);
-  } finally {
-    await db.end();
+        mensajeError(error)
   }
 };
 
@@ -172,16 +179,15 @@ const getUsers = async () => {
 //--------------- Actualizacion de datos de un usuario ---------------
 // ------------------------------------------------------------
 
-const updateUser = async (datos) => {
+const updateUser = async (username, email, password, id) => {
   try {
-    // console.log("entro");
-    // console.log(datos); //verifico que este entrando la informacion correcta
-
     // verifico que haya tipeado los 3 datos
-    if (!datos || datos.length < 4) {
+    if (!username || !password || !id) {
       throw new Error(`Los datos estan incompletos. 
 💡 Debes enviar ( nombre email password idDelUserAEditar)`);
     }
+
+    validarDatos(username, email, password) //valido los nuevos datos 
 
     const query = `
         UPDATE users
@@ -190,34 +196,29 @@ const updateUser = async (datos) => {
                 password = ?
             WHERE id = ?;
         `;
-    const [results] = await db.query(query, datos);
+    const [results] = await db.query(query, [username, email, password, id]);
 
     // verifico si se actualizo el usuario, si no se actualizo eso quiere decir que el id no pertenece a ningun ususario registrado en la base de datos
     if (results.affectedRows <= 0) {
       // aviso que no se encontro el usuario
-      throw new Error(
-        `❌ El id ingresado no pertenece a ningun usuario registrado en la base de datos`,
+      throw new Error(`El id ingresado no pertenece a ningun usuario registrado en la base de datos`,
       );
     }
 
-    console.log(`---------------------------------------------
-✅ Usuarios actalizados de la base de datos: ${results.affectedRows}
-ID: ${datos[datos.length - 1]}
----------------------------------------------`);
-    return true;
+    console.log(boxen(`✅ Usuarios actalizados de la base de datos: ${results.affectedRows}`, {
+            padding: 0.5,
+            margin: 1,
+            borderColor: "green",
+            borderStyle: "round"
+        }))
+
   } catch (error) {
     // si el email ya existe entonces le hago saber al usuario
     if (error.code === 'ER_DUP_ENTRY') {
-        console.error(`---------------------------------------------
-❌ Error: El email de usuario ya existe.
----------------------------------------------`);
+        mensajeErrorEmail()
     }else{
-        console.error(`---------------------------------------------
-❌ Error: ${error.message}
----------------------------------------------`);
+        mensajeError(error)
     }
-  } finally {
-    await db.end();
   }
 };
 
@@ -234,7 +235,7 @@ const deleteUserById = async (id) => {
 
     // hago la query a la base de datos
     const query = `DELETE FROM users WHERE id = ?;`;
-    const [results] = await db.query(query, id); //obtengo los resultados de la query y asi puedo ver la cantidad de filas afectadas para sabe si elimine o no usuario
+    const [results] = await db.query(query, [id]); //obtengo los resultados de la query y asi puedo ver la cantidad de filas afectadas para sabe si elimine o no usuario
 
     // en caso de que las filas afectadas se  0 o menos a 0 entonces significa que el id no corresponde a ningun usuario , asi que lo informo
     if (results.affectedRows <= 0) {
@@ -244,16 +245,38 @@ const deleteUserById = async (id) => {
     }
 
     // si la query tiene fila afectada entonces si elimino al usuario asi que lo infomo
-    console.log(`---------------------------------------------
-✅ Usuario con id: ${id} eliminado correctamente.
----------------------------------------------`);
+    console.log(boxen(`✅ Usuario con id: ${id} eliminado correctamente.`, {
+            padding: 0.5,
+            margin: 1,
+            borderColor: "green",
+            borderStyle: "round"
+        }))
+
   } catch (error) {
-    console.error(`---------------------------------------------
-❌ Error: ${error.message}
----------------------------------------------`);
-  } finally {
-    await db.end();
+        mensajeError(error)
   }
 };
 
-export { adduser, getUserByEmail, getUsers, updateUser, deleteUserById, addUsers };
+// ------------------------------------------------------------
+// --------------- Resetear base de datos ---------------
+// ------------------------------------------------------------
+
+const clearUsersTable = async () => {
+  try {
+    const [result] = await db.query("DELETE FROM users;"); //elimino los datos de la tabla users
+
+    console.log(
+      boxen(`🧹 Se eliminaron ${result.affectedRows} usuarios`, {
+        padding: 0.5,
+        margin: 1,
+        borderColor: "yellow",
+        borderStyle: "round"
+      })
+    );
+
+  } catch (error) {
+    mensajeError(error)
+  }
+};
+
+export { addUser, getUserByEmail, getUsers, updateUser, deleteUserById, addUsers, clearUsersTable };
