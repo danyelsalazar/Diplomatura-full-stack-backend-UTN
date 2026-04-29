@@ -1,3 +1,4 @@
+// aqui configuro la conexion a la base de datos, utilizando las variables de entorno que se encuentran en el archivo .env
 import "dotenv/config"
 import mysql from "mysql2/promise";
 

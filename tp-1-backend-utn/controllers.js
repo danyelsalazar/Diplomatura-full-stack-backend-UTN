@@ -1,9 +1,10 @@
+// aqui van los controladores de la aplicacion, es decir, las funciones que se encargan de manejar las peticiones y respuestas de la aplicacion, y que se conectan con la base de datos para realizar las operaciones necesarias.
 import { log } from "console";
 import { db } from "./config.js";
 import crypto from "crypto"
 
 
-// creamos los usuarios
+// creamos el usuario
 const adduser = async (username, email, password) =>{
     try {
         // validaciones:
@@ -58,7 +59,7 @@ const getUserByEmail = async(email)=>{
 
         console.log(rows)
 
-        db.end()
+        await db.end()
 
         return;
         
@@ -77,18 +78,63 @@ const getUsers = async()=>{
 
         const [rows] = await db.query(query)
 
-        if(rows.length <= 0) return console.log("No hay usuarios que mostrar");
+        if(rows.length <= 0) return console.log("❌ No hay usuarios que mostrar");
 
-        console.log("Uusarios de la base de datos: ", rows);
+        console.log(`---------------------------------------------
+🗂️ Usarios de la base de datos: `, rows , `
+---------------------------------------------`);
+
+        // cierro la conexion de la base de datos
+        await db.end(); 
 
         return;
         
     } catch (error) {
-        console.error("Error: ", error);
+        console.error("❌ Error: ", error);
         
+    }
+}
+
+// Actualizacion de datos de un usuario
+
+const updateUser = async (datos) => {
+
+    try {
+        // console.log("entro");
+        // console.log(datos); //verifico que este entrando la informacion correcta
+        
+        // verifico que haya tipeado los 3 datos
+        if(!datos || datos.length < 4){
+            return console.log(`---------------------------------------------
+❌ Los datos estan incompletos. 
+💡 Debes enviar ( nombre email password idDelUserAEditar)
+---------------------------------------------`)
+        }
+
+        const query = `
+        UPDATE users
+            SET username = ?, 
+                email = ?,
+                password = ?
+            WHERE id = ?;
+        `
+        const [results] = await db.query(query, datos)
+
+        // cierro la conexion de la base de datos
+        await db.end(); 
+
+        return(
+                console.log(`---------------------------------------------
+✅ Usuarios actalizados de la base de datos: ${results.affectedRows}
+ID: ${datos[datos.length-1]}
+---------------------------------------------`)
+        )
+
+    } catch (error) {
+        console.error("❌ Error: ", error);
     }
 }
 
 
 
-export {adduser, getUserByEmail, getUsers}
+export {adduser, getUserByEmail, getUsers, updateUser}
