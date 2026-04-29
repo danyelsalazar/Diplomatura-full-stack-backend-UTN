@@ -32,7 +32,7 @@ Aplicación de línea de comandos (CLI) desarrollada en Node.js para gestionar u
 
 ```bash
 git clone https://github.com/danyelsalazar/Diplomatura-full-stack-backend-UTN.git
-cd TU-REPO
+cd tp-1-backen-utn
 ```
 
 ---
@@ -87,9 +87,15 @@ Ejecutar comandos desde la terminal:
 npm run dev <operacion> [argumentos...]
 ```
 
+
 ---
 
 ## 📌 Comandos disponibles
+
+###  🧾 Mostrar menu 
+```bash
+npm run dev
+```
 
 ### ➕ Crear usuario
 
