@@ -160,7 +160,7 @@ npm run dev addUsers
 
 ---
 
-## 📁 Estructura del proyecto
+## 📁 Estructura del proyectoo
 
 ```
 /project
