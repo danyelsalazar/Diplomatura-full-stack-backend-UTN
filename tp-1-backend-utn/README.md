@@ -47,11 +47,11 @@ npm install
 
 ### 3. Configurar variables de entorno
 
-Crear un archivo `.env` en la raíz del proyecto:
+Crear un archivo `.env` e la raiz de tp-1-backend-utn:
 
 ```env
-HOST=127.0.0.1
-BD_USER=root
+HOST=
+BD_USER=
 PASSWORD=
 DATABASE=usuarios_db
 ```
