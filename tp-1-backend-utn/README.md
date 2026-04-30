@@ -169,7 +169,7 @@ npm run dev addUsers
 ## 📁 Estructura del proyectoo
 
 ```
-/project
+/tp-1-backend-utn
 │── index.js        # Punto de entrada (CLI)
 │── controllers.js  # Lógica del negocio
 │── config.js       # Conexión a MySQL
