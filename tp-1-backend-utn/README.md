@@ -1,10 +1,10 @@
-# 🚀 Sistema de Gestión de Usuarios - CLI (Node.js + MySQL)
+# Sistema de Gestión de Usuarios - CLI (Node.js + MySQL)
 
 Aplicación de línea de comandos (CLI) desarrollada en Node.js para gestionar usuarios (crear, listar, actualizar y eliminar) utilizando una base de datos MySQL.
 
 ---
 
-## Características
+## 📎 Características
 
 * ✅ CRUD completo de usuarios
 * ✅ Validación de datos (email, nombre y contraseña)
@@ -15,7 +15,7 @@ Aplicación de línea de comandos (CLI) desarrollada en Node.js para gestionar u
 
 ---
 
-## Tecnologías utilizadas
+## 📎 Tecnologías utilizadas
 
 * Node.js
 * MySQL
@@ -26,7 +26,7 @@ Aplicación de línea de comandos (CLI) desarrollada en Node.js para gestionar u
 
 ---
 
-## ⚙️ Instalación
+## 📎 Instalación
 
 ### 1. Clonar el repositorio
 
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 ---
 
-## ▶️ Uso de la aplicación
+## 📎 Uso de la aplicación
 
 Ejecutar comandos desde la terminal:
 
@@ -90,14 +90,14 @@ npm run dev <operacion> [argumentos...]
 
 ---
 
-## 📌 Comandos disponibles
+## 📎 Comandos disponibles
 
-###  🧾 Mostrar menu 
+### - Mostrar menu 
 ```bash
 npm run dev
 ```
 
-### ➕ Crear usuario
+### - Crear usuario
 
 ```bash
 npm run dev add nombre email password
@@ -105,7 +105,7 @@ npm run dev add nombre email password
 
 ---
 
-### 📦 Listar usuarios
+### - Listar usuarios
 
 ```bash
 npm run dev get
@@ -113,7 +113,7 @@ npm run dev get
 
 ---
 
-### 🔍 Buscar usuario por email
+### - Buscar usuario por email
 
 ```bash
 npm run dev getByEmail email
@@ -121,7 +121,7 @@ npm run dev getByEmail email
 
 ---
 
-### ✏️ Actualizar usuario
+### - Actualizar usuario
 
 ```bash
 npm run dev update nombre email password id
@@ -129,7 +129,7 @@ npm run dev update nombre email password id
 
 ---
 
-### 🗑️ Eliminar usuario
+### - Eliminar usuario
 
 ```bash
 npm run dev delete id
@@ -137,7 +137,7 @@ npm run dev delete id
 
 ---
 
-### 🧹 Eliminar todos los usuarios
+### - Eliminar todos los usuarios
 
 ```bash
 npm run dev resetclearTableUsers
@@ -145,7 +145,7 @@ npm run dev resetclearTableUsers
 
 ---
 
-### 🧪 Cargar usuarios de prueba
+### - Cargar usuarios de prueba
 
 ```bash
 npm run dev addUsers
@@ -153,7 +153,7 @@ npm run dev addUsers
 
 ---
 
-## 💡 Notas
+## 📎 Notas
 
 * El email debe tener formato válido
 * La contraseña debe tener:
@@ -166,7 +166,7 @@ npm run dev addUsers
 
 ---
 
-## 📁 Estructura del proyectoo
+## 📎 Estructura del proyectoo
 
 ```
 /tp-1-backend-utn
@@ -178,12 +178,12 @@ npm run dev addUsers
 
 ---
 
-## 👨‍💻 Autor
+## Autor
 
 Desarrollado por Danyel Salazar
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 Este proyecto es de uso académico.
